@@ -46,17 +46,19 @@ public class SocketHandler extends TextWebSocketHandler {
      * @param session
      */
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) {
-        //the messages will be broadcasted to all users when they are connected
-        sessions.add(session);
-        if (messages.size() > 0) {
-            messages.forEach(message -> {
-                try {
-                    session.sendMessage(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        if (sessions.size() < 2) {
+            //the messages will be broadcasted to all users when they are connected
+            sessions.add(session);
+            if (messages.size() > 0) {
+                messages.forEach(message -> {
+                    try {
+                        session.sendMessage(message);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
         }
     }
 
@@ -105,7 +107,7 @@ public class SocketHandler extends TextWebSocketHandler {
         //added for history tracking
         messages.add(new TextMessage(msg));
         //publish to add players
-        Thread.sleep(1000);
+        //  Thread.sleep(1000);
         for (WebSocketSession webSocketSession : sessions) {
             webSocketSession.sendMessage(
                     new TextMessage(msg));
