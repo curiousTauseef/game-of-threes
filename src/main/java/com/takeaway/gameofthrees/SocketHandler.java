@@ -117,7 +117,7 @@ public class SocketHandler extends TextWebSocketHandler {
         //added for history tracking
         messages.add(new TextMessage(msg));
         //publish to add players
-        //  Thread.sleep(1000);
+          Thread.sleep(500);
         for (WebSocketSession webSocketSession : sessions) {
             webSocketSession.sendMessage(
                     new TextMessage(msg));
