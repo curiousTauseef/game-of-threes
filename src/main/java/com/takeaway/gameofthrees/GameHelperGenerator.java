@@ -1,6 +1,4 @@
-package com.devglan.config;
-
-import org.springframework.stereotype.Component;
+package com.takeaway.gameofthrees;
 
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package com.devglan.config;
+package com.takeaway.gameofthrees;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;

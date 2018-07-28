@@ -1,4 +1,4 @@
-package com.devglan.config;
+package com.takeaway.gameofthrees;
 
 
 import org.junit.Before;
