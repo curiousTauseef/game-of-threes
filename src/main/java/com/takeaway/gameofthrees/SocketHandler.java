@@ -20,6 +20,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
     private GameHelperGenerator gameHelperGenerator = new GameHelperGenerator();
     private Boolean isFirstPlay = true;
+    private Boolean isFirstGameAndOneSession = false;
 
     private String msg = "";
     Integer gameNumber = 0;
@@ -27,7 +28,6 @@ public class SocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws Exception {
-
         if (isFirstPlay) {
             Map<String, String> value = new Gson().fromJson(message.getPayload(), Map.class);
             handleFirstPlayFromAStarterPlayer(session, value);
@@ -46,6 +46,7 @@ public class SocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        //limit number of players to 2
         if (sessions.size() < 2) {
             //the messages will be broadcasted to all users when they are connected
             sessions.add(session);
@@ -57,6 +58,12 @@ public class SocketHandler extends TextWebSocketHandler {
                         e.printStackTrace();
                     }
                 });
+            }
+            if (sessions.size() == 2 && isFirstGameAndOneSession) {
+                WebSocketSession wantedSession = sessions.stream()
+                        .filter(itSession -> itSession != session).findFirst().get();
+                handleTextMessage(wantedSession, null);
+                isFirstGameAndOneSession = false;
             }
         }
     }
@@ -77,6 +84,21 @@ public class SocketHandler extends TextWebSocketHandler {
         }
     }
 
+    private void handleFirstPlayFromAStarterPlayer(WebSocketSession session, Map<String, String> value) throws Exception {
+        if (isFirstPlay && sessions.size() == 1) {
+            isFirstGameAndOneSession = true;
+        }
+
+        gameNumber =
+                value.get("number").length() > 0 ?
+                        Integer.parseInt(value.get("number")) :
+                        gameHelperGenerator.generateNumberDivisibleByThree();
+
+        formAndPublishTheMessageToClients(session);
+        isFirstPlay = false;
+        handleTextMessage(session, null);
+    }
+
     private void handleTurnsFromPlayersAfterFirstPlay(WebSocketSession session) throws Exception {
         WebSocketSession wantedSession = sessions.stream()
                 .filter(itSession -> itSession != session).findFirst().get();
@@ -88,17 +110,6 @@ public class SocketHandler extends TextWebSocketHandler {
         } else {
             handleTextMessage(wantedSession, null);
         }
-    }
-
-    private void handleFirstPlayFromAStarterPlayer(WebSocketSession session, Map<String, String> value) throws Exception {
-        gameNumber =
-                value.get("number").length() > 0 ?
-                        Integer.parseInt(value.get("number")) :
-                        gameHelperGenerator.generateNumberDivisibleByThree();
-
-        formAndPublishTheMessageToClients(session);
-        isFirstPlay = false;
-        handleTextMessage(session, null);
     }
 
     private void formAndPublishTheMessageToClients(WebSocketSession session) throws Exception {
