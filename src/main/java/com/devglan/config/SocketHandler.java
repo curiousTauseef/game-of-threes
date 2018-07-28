@@ -10,6 +10,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
@@ -22,40 +23,77 @@ public class SocketHandler extends TextWebSocketHandler {
     private Boolean isFirstPlay = true;
 
     private String msg = "";
-    Integer gameNumber =0;
+    Integer gameNumber = 0;
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws IOException {
 
-        Map<String, String> value = new Gson().fromJson(message.getPayload(), Map.class);
-
         if (isFirstPlay) {
-             gameNumber =
-                    value.get("number").length() > 0 ?
-                            Integer.parseInt(value.get("number")) :
-                            gameHelperGenerator.generateNumberDivisibleByThree();
-
-            msg = "Player " + session.getId() + " Placed: " + gameNumber;
-            //added for history tracking
-            messages.add(new TextMessage(msg));
-            //publish to add players
-            for (WebSocketSession webSocketSession : sessions) {
-                webSocketSession.sendMessage(
-                        new TextMessage(msg));
-            }
-            isFirstPlay = false;
+            Map<String, String> value = new Gson().fromJson(message.getPayload(), Map.class);
+            handleFirstPlayFromAStarterPlayer(session, value);
         } else {
 
+            //Not First Game
+            if (sessions.size() > 1) {
+                WebSocketSession wantedSession = sessions.stream()
+                        .filter(itSession -> itSession != session).findFirst().get();
+                gameNumber = gameHelperGenerator
+                        .correctTheNumberIfNotDivisibleByThreeOtherwiseReturnIt(gameNumber) / 3;
+                formAndPublishTheMessageToClients(wantedSession);
+                if (gameNumber==1) {
+                    sendWinnerMessage(wantedSession);
+                } else {
+                    handleTextMessage(wantedSession, null);
+                }
+            }
         }
 
     }
 
+    private void handleFirstPlayFromAStarterPlayer(WebSocketSession session, Map<String, String> value) throws IOException {
+        gameNumber =
+                value.get("number").length() > 0 ?
+                        Integer.parseInt(value.get("number")) :
+                        gameHelperGenerator.generateNumberDivisibleByThree();
+
+        formAndPublishTheMessageToClients(session);
+        isFirstPlay = false;
+        handleTextMessage(session, null);
+    }
+
+    private void formAndPublishTheMessageToClients(WebSocketSession session) throws IOException {
+        msg = "Player " + session.getId() + " Placed: " + gameNumber;
+        //added for history tracking
+        messages.add(new TextMessage(msg));
+        //publish to add players
+        for (WebSocketSession webSocketSession : sessions) {
+            webSocketSession.sendMessage(
+                    new TextMessage(msg));
+        }
+    }
+
+
+    private void sendWinnerMessage(WebSocketSession session) throws IOException {
+        msg = "Player " + session.getId() + " Won WOHOOO ";
+        //added for history tracking
+        messages.add(new TextMessage(msg));
+        //publish to add players
+        for (WebSocketSession webSocketSession : sessions) {
+            webSocketSession.sendMessage(
+                    new TextMessage(msg));
+        }
+    }
+
+    /**
+     * invoked after new connection introduced
+     *
+     * @param session
+     */
     @Override
-    public void afterConnectionEstablished(WebSocketSession session){
+    public void afterConnectionEstablished(WebSocketSession session) {
         //the messages will be broadcasted to all users when they are connected
         sessions.add(session);
-
         if (messages.size() > 0) {
             messages.forEach(message -> {
                 try {
@@ -67,11 +105,20 @@ public class SocketHandler extends TextWebSocketHandler {
         }
     }
 
+    /**
+     * Invoked upon disconnect
+     *
+     * @param session
+     * @param status
+     * @throws Exception
+     */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
-        if (sessions.size() == 0)
+        if (sessions.size() == 0) {
             messages.clear();
+            isFirstPlay = true;
+        }
     }
 
 }
