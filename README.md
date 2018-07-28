@@ -23,53 +23,50 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+* Java
+* Maven
+* [ _optional_ ] IntelliJ if you prefere to run / build ... etc via IDE
 
-```
-Give examples
-```
+### Covered Cases
+* Two Players can play against each other without User input
+* One Player can receive Input from the user
+* One Player can start the game and wait for the other player to join
+* Players can proceed many times after the initial game end with new sessions after disconnect and reconnect again
 
-### Installing
+### How to play
+* Get the server up by running mvn spring-boot:run
+* in a browser navigate to : http://localhost:8080 to open a client (open another one for the other player)
+* you need to decide how to play
+* start the websocket connection in one or the two players
+* click send directly to watch the game without user interaction otherwise enter a number to interact
+* in case just one player started and input introduced, the player will wait for the other player to be associated
+* the winner will be announced if 1 is produced.
+* Note: you can initiate the game many time without restart the server by restarting only the websocket connection 
 
-A step by step series of examples that tell you how to get a development env running
+## Installing
 
-Say what the step will be
+##### Clone the repository
 
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
+  ```
+    git clone git@github.com:maha-hamza/game-of-threes.git
+  ```
+  
+##### Getting the environment ready
+   build the environment using maven:
+  ```
+   mvn clean install
+  ```
+#####   run the application
+ ```
+  mvn spring-boot:run
+ ```
+ 
 ## Running the tests
 
  run the following command to run the tests:
   ```
   mvn test
   ```
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
 ## Built With
 
 * [SpringBoot](https://spring.io/guides/gs/spring-boot/) - To accelerate and facilitate application development
