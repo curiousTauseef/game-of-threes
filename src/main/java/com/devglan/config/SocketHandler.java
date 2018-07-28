@@ -63,7 +63,7 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     private void formAndPublishTheMessageToClients(WebSocketSession session) throws Exception {
-        msg = "Player " + session.getId() + " Placed: " + gameNumber;
+        msg = "Player " + (Integer.parseInt(session.getId())+1) + " Placed: " + gameNumber;
         //added for history tracking
         messages.add(new TextMessage(msg));
         //publish to add players
@@ -76,7 +76,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
 
     private void sendWinnerMessage(WebSocketSession session) throws IOException {
-        msg = "Player " + session.getId() + " Won WOHOOO ";
+        msg = "Player " + (Integer.parseInt(session.getId())+1) + " Won WOHOOO ";
         //added for history tracking
         messages.add(new TextMessage(msg));
         //publish to add players
