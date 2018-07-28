@@ -43,6 +43,10 @@ These instructions will get you a copy of the project up and running on your loc
 * the winner will be announced if 1 is produced.
 * Note: you can initiate the game many time without restart the server by restarting only the websocket connection 
 
+
+![Screenshot](shot.png)
+
+
 ## Installing
 
 ##### Clone the repository

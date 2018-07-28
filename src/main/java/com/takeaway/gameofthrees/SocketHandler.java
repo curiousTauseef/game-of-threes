@@ -29,7 +29,7 @@ public class SocketHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws Exception {
         if (isFirstPlay) {
-            Map<String, String> value = new Gson().fromJson(message.getPayload(), Map.class);
+            Map value = new Gson().fromJson(message.getPayload(), Map.class);
             handleFirstPlayFromAStarterPlayer(session, value);
         } else {
             if (sessions.size() > 1) {
@@ -113,31 +113,31 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     private void formAndPublishTheMessageToClients(WebSocketSession session) throws Exception {
+        Thread.sleep(500);
         msg = "Player " + (Integer.parseInt(session.getId()) + 1) + " Placed: " + gameNumber;
-        //added for history tracking
-        messages.add(new TextMessage(msg));
-        //publish to add players
-          Thread.sleep(500);
-        for (WebSocketSession webSocketSession : sessions) {
-            webSocketSession.sendMessage(
-                    new TextMessage(msg));
-        }
+        publishMessageToClients();
+
     }
 
 
     private void sendWinnerMessage(WebSocketSession session) throws IOException {
         msg = "Woohooooo!!! <br/> Player " + (Integer.parseInt(session.getId()) + 1) + " Won ";
         //added for history tracking
-        messages.add(new TextMessage(msg));
-        //publish to add players
-        for (WebSocketSession webSocketSession : sessions) {
-            webSocketSession.sendMessage(
-                    new TextMessage(msg));
-        }
+        publishMessageToClients();
 
         sessions.clear();
         messages.clear();
 
     }
 
+
+    private void publishMessageToClients() throws IOException {
+        //added for history tracking
+        messages.add(new TextMessage(msg));
+        //publish to add players
+        for (WebSocketSession webSocketSession : sessions) {
+            webSocketSession.sendMessage(
+                    new TextMessage(msg));
+        }
+    }
 }
