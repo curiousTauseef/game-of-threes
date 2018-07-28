@@ -32,57 +32,12 @@ public class SocketHandler extends TextWebSocketHandler {
             Map<String, String> value = new Gson().fromJson(message.getPayload(), Map.class);
             handleFirstPlayFromAStarterPlayer(session, value);
         } else {
-
             //Not First Game
             if (sessions.size() > 1) {
-                WebSocketSession wantedSession = sessions.stream()
-                        .filter(itSession -> itSession != session).findFirst().get();
-                gameNumber = gameHelperGenerator
-                        .correctTheNumberIfNotDivisibleByThreeOtherwiseReturnIt(gameNumber) / 3;
-                formAndPublishTheMessageToClients(wantedSession);
-                if (gameNumber==1) {
-                    sendWinnerMessage(wantedSession);
-                } else {
-                    handleTextMessage(wantedSession, null);
-                }
+                handleTurnsFromPlayersAfterFirstPlay(session);
             }
         }
 
-    }
-
-    private void handleFirstPlayFromAStarterPlayer(WebSocketSession session, Map<String, String> value) throws Exception {
-        gameNumber =
-                value.get("number").length() > 0 ?
-                        Integer.parseInt(value.get("number")) :
-                        gameHelperGenerator.generateNumberDivisibleByThree();
-
-        formAndPublishTheMessageToClients(session);
-        isFirstPlay = false;
-        handleTextMessage(session, null);
-    }
-
-    private void formAndPublishTheMessageToClients(WebSocketSession session) throws Exception {
-        msg = "Player " + (Integer.parseInt(session.getId())+1) + " Placed: " + gameNumber;
-        //added for history tracking
-        messages.add(new TextMessage(msg));
-        //publish to add players
-        Thread.sleep(1000);
-        for (WebSocketSession webSocketSession : sessions) {
-            webSocketSession.sendMessage(
-                    new TextMessage(msg));
-        }
-    }
-
-
-    private void sendWinnerMessage(WebSocketSession session) throws IOException {
-        msg = "Woohooooo!!! <br/> Player " + (Integer.parseInt(session.getId())+1) + " Won ";
-        //added for history tracking
-        messages.add(new TextMessage(msg));
-        //publish to add players
-        for (WebSocketSession webSocketSession : sessions) {
-            webSocketSession.sendMessage(
-                    new TextMessage(msg));
-        }
     }
 
     /**
@@ -118,6 +73,54 @@ public class SocketHandler extends TextWebSocketHandler {
         if (sessions.size() == 0) {
             messages.clear();
             isFirstPlay = true;
+        }
+    }
+
+    private void handleTurnsFromPlayersAfterFirstPlay(WebSocketSession session) throws Exception {
+        WebSocketSession wantedSession = sessions.stream()
+                .filter(itSession -> itSession != session).findFirst().get();
+        gameNumber = gameHelperGenerator
+                .correctTheNumberIfNotDivisibleByThreeOtherwiseReturnIt(gameNumber) / 3;
+        formAndPublishTheMessageToClients(wantedSession);
+        if (gameNumber == 1) {
+            sendWinnerMessage(wantedSession);
+        } else {
+            handleTextMessage(wantedSession, null);
+        }
+    }
+
+    private void handleFirstPlayFromAStarterPlayer(WebSocketSession session, Map<String, String> value) throws Exception {
+        gameNumber =
+                value.get("number").length() > 0 ?
+                        Integer.parseInt(value.get("number")) :
+                        gameHelperGenerator.generateNumberDivisibleByThree();
+
+        formAndPublishTheMessageToClients(session);
+        isFirstPlay = false;
+        handleTextMessage(session, null);
+    }
+
+    private void formAndPublishTheMessageToClients(WebSocketSession session) throws Exception {
+        msg = "Player " + (Integer.parseInt(session.getId()) + 1) + " Placed: " + gameNumber;
+        //added for history tracking
+        messages.add(new TextMessage(msg));
+        //publish to add players
+        Thread.sleep(1000);
+        for (WebSocketSession webSocketSession : sessions) {
+            webSocketSession.sendMessage(
+                    new TextMessage(msg));
+        }
+    }
+
+
+    private void sendWinnerMessage(WebSocketSession session) throws IOException {
+        msg = "Woohooooo!!! <br/> Player " + (Integer.parseInt(session.getId()) + 1) + " Won ";
+        //added for history tracking
+        messages.add(new TextMessage(msg));
+        //publish to add players
+        for (WebSocketSession webSocketSession : sessions) {
+            webSocketSession.sendMessage(
+                    new TextMessage(msg));
         }
     }
 
