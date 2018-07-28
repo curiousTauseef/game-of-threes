@@ -27,7 +27,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
-            throws IOException {
+            throws Exception {
 
         if (isFirstPlay) {
             Map<String, String> value = new Gson().fromJson(message.getPayload(), Map.class);
@@ -51,7 +51,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
     }
 
-    private void handleFirstPlayFromAStarterPlayer(WebSocketSession session, Map<String, String> value) throws IOException {
+    private void handleFirstPlayFromAStarterPlayer(WebSocketSession session, Map<String, String> value) throws Exception {
         gameNumber =
                 value.get("number").length() > 0 ?
                         Integer.parseInt(value.get("number")) :
@@ -62,11 +62,12 @@ public class SocketHandler extends TextWebSocketHandler {
         handleTextMessage(session, null);
     }
 
-    private void formAndPublishTheMessageToClients(WebSocketSession session) throws IOException {
+    private void formAndPublishTheMessageToClients(WebSocketSession session) throws Exception {
         msg = "Player " + session.getId() + " Placed: " + gameNumber;
         //added for history tracking
         messages.add(new TextMessage(msg));
         //publish to add players
+        Thread.sleep(1000);
         for (WebSocketSession webSocketSession : sessions) {
             webSocketSession.sendMessage(
                     new TextMessage(msg));
