@@ -29,13 +29,15 @@ function disconnect() {
 }
 
 function sendName() {
-    var data = JSON.stringify({'number': $("#name").val()})
-    ws.send(data);
+    if ($("#name").val() >= 3) {
+        var data = JSON.stringify({'number': $("#name").val()})
+        ws.send(data);
+    }
 }
 
 function showGreeting(message) {
     if (message.includes("Won")) {
-        $("#greetings").append("<tr><td><div class=\"alert alert-info\" role=\"alert\"> "+message+" </div></td></tr>");
+        $("#greetings").append("<tr><td><div class=\"alert alert-info\" role=\"alert\"> " + message + " </div></td></tr>");
     } else {
         $("#greetings").append("<tr><td> " + message + "</td></tr>");
     }
