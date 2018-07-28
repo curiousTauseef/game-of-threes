@@ -29,7 +29,8 @@ function disconnect() {
 }
 
 function sendName() {
-    if ($("#name").val() >= 3) {
+    alert($("#name").val().length);
+    if ($("#name").val() >= 3 || $("#name").val().length==0) {
         var data = JSON.stringify({'number': $("#name").val()})
         ws.send(data);
     }
