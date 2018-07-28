@@ -32,7 +32,6 @@ public class SocketHandler extends TextWebSocketHandler {
             Map<String, String> value = new Gson().fromJson(message.getPayload(), Map.class);
             handleFirstPlayFromAStarterPlayer(session, value);
         } else {
-            //Not First Game
             if (sessions.size() > 1) {
                 handleTurnsFromPlayersAfterFirstPlay(session);
             }
@@ -124,6 +123,10 @@ public class SocketHandler extends TextWebSocketHandler {
             webSocketSession.sendMessage(
                     new TextMessage(msg));
         }
+
+        sessions.clear();
+        messages.clear();
+
     }
 
 }
