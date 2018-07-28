@@ -1,5 +1,5 @@
-
 var ws;
+
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
@@ -13,11 +13,11 @@ function setConnected(connected) {
 }
 
 function connect() {
-	ws = new WebSocket('ws://localhost:8080/game-of-three');
-	ws.onmessage = function(data){
-		showGreeting(data.data);
-	}
-	 setConnected(true);
+    ws = new WebSocket('ws://localhost:8080/game-of-three');
+    ws.onmessage = function (data) {
+        showGreeting(data.data);
+    }
+    setConnected(true);
 }
 
 function disconnect() {
@@ -29,20 +29,30 @@ function disconnect() {
 }
 
 function sendName() {
-	var data = JSON.stringify({'number': $("#name").val()})
+    var data = JSON.stringify({'number': $("#name").val()})
     ws.send(data);
 }
 
 function showGreeting(message) {
-    $("#greetings").append("<tr><td> " + message + "</td></tr>");
+    if (message.includes("Won")) {
+        $("#greetings").append("<tr><td><div class=\"alert alert-info\" role=\"alert\"> "+message+" </div></td></tr>");
+    } else {
+        $("#greetings").append("<tr><td> " + message + "</td></tr>");
+    }
 }
 
 $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
+    $("#connect").click(function () {
+        connect();
+    });
+    $("#disconnect").click(function () {
+        disconnect();
+    });
+    $("#send").click(function () {
+        sendName();
+    });
 });
 

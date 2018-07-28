@@ -75,7 +75,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
 
     private void sendWinnerMessage(WebSocketSession session) throws IOException {
-        msg = "Player " + (Integer.parseInt(session.getId())+1) + " Won WOHOOO ";
+        msg = "Woohooooo!!! <br/> Player " + (Integer.parseInt(session.getId())+1) + " Won ";
         //added for history tracking
         messages.add(new TextMessage(msg));
         //publish to add players
