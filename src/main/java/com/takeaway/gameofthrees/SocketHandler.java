@@ -13,17 +13,7 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
-public class SocketHandler extends TextWebSocketHandler {
-
-    private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-    private List<TextMessage> messages = new CopyOnWriteArrayList<>();
-
-    private GameHelperGenerator gameHelperGenerator = new GameHelperGenerator();
-    private Boolean isFirstPlay = true;
-    private Boolean isFirstGameAndOneSession = false;
-
-    private String msg = "";
-    Integer gameNumber = 0;
+public class SocketHandler extends SocketHandlerBase {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
@@ -68,13 +58,6 @@ public class SocketHandler extends TextWebSocketHandler {
         }
     }
 
-    /**
-     * Invoked upon disconnect
-     *
-     * @param session
-     * @param status
-     * @throws Exception
-     */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
@@ -84,60 +67,4 @@ public class SocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private void handleFirstPlayFromAStarterPlayer(WebSocketSession session, Map<String, String> value) throws Exception {
-        if (isFirstPlay && sessions.size() == 1) {
-            isFirstGameAndOneSession = true;
-        }
-
-        gameNumber =
-                value.get("number").length() > 0 ?
-                        Integer.parseInt(value.get("number")) :
-                        gameHelperGenerator.generateNumberDivisibleByThree();
-
-        formAndPublishTheMessageToClients(session);
-        isFirstPlay = false;
-        handleTextMessage(session, null);
-    }
-
-    private void handleTurnsFromPlayersAfterFirstPlay(WebSocketSession session) throws Exception {
-        WebSocketSession wantedSession = sessions.stream()
-                .filter(itSession -> itSession != session).findFirst().get();
-        gameNumber = gameHelperGenerator
-                .correctTheNumberIfNotDivisibleByThreeOtherwiseReturnIt(gameNumber) / 3;
-        formAndPublishTheMessageToClients(wantedSession);
-        if (gameNumber == 1) {
-            sendWinnerMessage(wantedSession);
-        } else {
-            handleTextMessage(wantedSession, null);
-        }
-    }
-
-    private void formAndPublishTheMessageToClients(WebSocketSession session) throws Exception {
-        Thread.sleep(500);
-        msg = "Player " + (Integer.parseInt(session.getId()) + 1) + " Placed: " + gameNumber;
-        publishMessageToClients();
-
-    }
-
-
-    private void sendWinnerMessage(WebSocketSession session) throws IOException {
-        msg = "Woohooooo!!! <br/> Player " + (Integer.parseInt(session.getId()) + 1) + " Won ";
-        //added for history tracking
-        publishMessageToClients();
-
-        sessions.clear();
-        messages.clear();
-
-    }
-
-
-    private void publishMessageToClients() throws IOException {
-        //added for history tracking
-        messages.add(new TextMessage(msg));
-        //publish to add players
-        for (WebSocketSession webSocketSession : sessions) {
-            webSocketSession.sendMessage(
-                    new TextMessage(msg));
-        }
-    }
 }
