@@ -103,7 +103,7 @@ public abstract class SocketHandlerBase extends AbstractWebSocketHandler {
      *
      * @throws IOException
      */
-    private void publishMessageToClients() throws IOException {
+    private void publishMessageToClients() {
         //added for history tracking
         messages.add(new TextMessage(msg));
         //publish to add players
