@@ -8,5 +8,6 @@ public class StaticDataProvider {
     public static final Integer MIN = 3;
     public static final Integer MAX = 1000;
     public static final String INPUT_LABEL = "number";
-    public static final Integer THREAD_WAITING_TIME=500;
+    public static final Integer THREAD_WAITING_TIME = 500;
+    public static final String WEBSOCKET_URI = "/game-of-three";
 }
