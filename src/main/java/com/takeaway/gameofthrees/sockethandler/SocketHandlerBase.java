@@ -1,5 +1,6 @@
-package com.takeaway.gameofthrees;
+package com.takeaway.gameofthrees.sockethandler;
 
+import com.takeaway.gameofthrees.GameHelperGenerator;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static com.takeaway.gameofthrees.StaticDataProvider.*;
+import static com.takeaway.gameofthrees.datafeeder.StaticDataProvider.*;
 
 /**
  * Parent class for SocketHandler to include supportive methods shared between operational work flow

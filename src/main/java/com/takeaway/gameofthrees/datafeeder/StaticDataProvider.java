@@ -1,4 +1,4 @@
-package com.takeaway.gameofthrees;
+package com.takeaway.gameofthrees.datafeeder;
 
 public class StaticDataProvider {
     public static final String WINNER_MESSAGE

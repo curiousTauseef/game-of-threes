@@ -1,4 +1,4 @@
-package com.takeaway.gameofthrees;
+package com.takeaway.gameofthrees.sockethandler;
 
 import com.google.gson.Gson;
 import org.springframework.stereotype.Component;

@@ -2,7 +2,7 @@ package com.takeaway.gameofthrees;
 
 import java.util.Random;
 
-import static com.takeaway.gameofthrees.StaticDataProvider.*;
+import static com.takeaway.gameofthrees.datafeeder.StaticDataProvider.*;
 
 /**
  * Contain Helper Methods that check the main operations of the game
