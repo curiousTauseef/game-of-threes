@@ -29,8 +29,8 @@ public abstract class SocketHandlerBase extends TextWebSocketHandler {
         }
 
         gameNumber =
-                value.get("number").length() > 0 ?
-                        Integer.parseInt(value.get("number")) :
+                value.get(INPUT_LABEL).length() > 0 ?
+                        Integer.parseInt(value.get(INPUT_LABEL)) :
                         gameHelperGenerator.generateNumberDivisibleByThree();
 
         formAndPublishTheMessageToClients(session);
@@ -52,7 +52,7 @@ public abstract class SocketHandlerBase extends TextWebSocketHandler {
     }
 
     protected void formAndPublishTheMessageToClients(WebSocketSession session) throws Exception {
-        Thread.sleep(500);
+        Thread.sleep(THREAD_WAITING_TIME);
         msg = PLAYER_PLAY_TURN.replace("[1]", String.valueOf(Integer.parseInt(session.getId()) + 1))
                 .replace("[2]", String.valueOf(gameNumber));
         publishMessageToClients();
