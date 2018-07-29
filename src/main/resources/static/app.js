@@ -28,9 +28,9 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
-    if ($("#name").val() >= 3 || $("#name").val().length==0) {
-        var data = JSON.stringify({'number': $("#name").val()})
+function sendNumber() {
+    if ($("#number").val() >= 3 || $("#number").val().length == 0) {
+        var data = JSON.stringify({'number': $("#number").val()})
         ws.send(data);
     }
 }
@@ -54,7 +54,7 @@ $(function () {
         disconnect();
     });
     $("#send").click(function () {
-        sendName();
+        sendNumber();
     });
 });
 
