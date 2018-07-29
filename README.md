@@ -41,8 +41,7 @@ These instructions will get you a copy of the project up and running on your loc
 * click send directly to watch the game without user interaction otherwise enter a number to interact
 * in case just one player started and input introduced, the player will wait for the other player to be associated
 * the winner will be announced if 1 is produced.
-* Note: you can initiate the game many time without restart the server by restarting only the websocket connection 
-
+* NOTE:game can go on with the same players many times
 
 ![Screenshot](shot.png)
 

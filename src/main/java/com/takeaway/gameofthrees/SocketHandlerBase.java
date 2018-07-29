@@ -62,8 +62,9 @@ public abstract class SocketHandlerBase extends TextWebSocketHandler {
         //added for history tracking
         publishMessageToClients();
 
-        sessions.clear();
+        //sessions.clear();
         messages.clear();
+        isFirstPlay=true;
 
     }
 
