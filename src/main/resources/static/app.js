@@ -9,13 +9,13 @@ function setConnected(connected) {
     else {
         $("#conversation").hide();
     }
-    $("#greetings").html("");
+    $("#playermessage").html("");
 }
 
 function connect() {
     ws = new WebSocket('ws://localhost:8080/game-of-three');
     ws.onmessage = function (data) {
-        showGreeting(data.data);
+        showPlayerMessage(data.data);
     }
     setConnected(true);
 }
@@ -35,11 +35,11 @@ function sendName() {
     }
 }
 
-function showGreeting(message) {
+function showPlayerMessage(message) {
     if (message.includes("Won")) {
-        $("#greetings").append("<tr><td><div class=\"alert alert-info\" role=\"alert\"> " + message + " </div></td></tr>");
+        $("#playermessage").append("<tr><td><div class=\"alert alert-info\" role=\"alert\"> " + message + " </div></td></tr>");
     } else {
-        $("#greetings").append("<tr><td> " + message + "</td></tr>");
+        $("#playermessage").append("<tr><td> " + message + "</td></tr>");
     }
 }
 

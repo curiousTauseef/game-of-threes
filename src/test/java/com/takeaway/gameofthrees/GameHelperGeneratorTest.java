@@ -20,9 +20,9 @@ public class GameHelperGeneratorTest {
 
 
     @Test
-    public void shouldGenerateRandomNumberLessThanHundred(){
+    public void shouldGenerateRandomNumberLessThanThousand(){
         assertThat(gameHelperGenerator.generateNumberDivisibleByThree())
-                .isLessThan(100);
+                .isLessThan(1001);
     }
 
     @Test
