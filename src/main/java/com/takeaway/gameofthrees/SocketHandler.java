@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Socket Handler that handles the main operations in the websocket between clients
+ */
 @Component
 public class SocketHandler extends SocketHandlerBase {
 
@@ -38,7 +41,6 @@ public class SocketHandler extends SocketHandlerBase {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         //limit number of players to 2
         if (sessions.size() < 2) {
-            //the messages will be broadcasted to all users when they are connected
             sessions.add(session);
             if (messages.size() > 0) {
                 messages.forEach(message -> {
