@@ -76,6 +76,10 @@ These instructions will get you a copy of the project up and running on your loc
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [SpringBoot Websocket without Stomb](https://www.devglan.com/spring-boot/spring-websocket-integration-example-without-stomp) - to do websocket integration with customized protocol
 
+## Tested Under 
+* Windows
+* MacOS
+
 ## Author
 
 * **Maha M. Hamza** - *Software Developer* - (https://github.com/maha-hamza)
