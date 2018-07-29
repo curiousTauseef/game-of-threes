@@ -59,7 +59,7 @@ public class SocketHandler extends SocketHandlerBase {
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         sessions.remove(session);
         if (sessions.size() == 0) {
             messages.clear();

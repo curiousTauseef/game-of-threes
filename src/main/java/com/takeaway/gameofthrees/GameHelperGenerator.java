@@ -1,7 +1,7 @@
 package com.takeaway.gameofthrees;
 
 import java.util.Random;
-
+import static com.takeaway.gameofthrees.StaticDataProvider.*;
 /**
  * Contain Helper Methods
  */
@@ -10,7 +10,7 @@ public class GameHelperGenerator {
 
     public Integer generateNumberDivisibleByThree() {
         Random random=new Random();
-        return random.ints(3,(97)).findFirst().getAsInt();
+        return random.ints(MIN,(MAX+1)).findFirst().getAsInt();
     }
 
 
@@ -24,12 +24,6 @@ public class GameHelperGenerator {
         }
         return number;
     }
-
-    public Boolean checkWinner(Integer number){
-        return number /3 == 1;
-
-    }
-
 
 
 }

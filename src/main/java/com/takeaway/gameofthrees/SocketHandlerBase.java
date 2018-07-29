@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static com.takeaway.gameofthrees.StaticDataProvider.*;
+
 public abstract class SocketHandlerBase extends TextWebSocketHandler {
 
     protected String msg = "";
@@ -51,20 +53,20 @@ public abstract class SocketHandlerBase extends TextWebSocketHandler {
 
     protected void formAndPublishTheMessageToClients(WebSocketSession session) throws Exception {
         Thread.sleep(500);
-        msg = "Player " + (Integer.parseInt(session.getId()) + 1) + " Placed: " + gameNumber;
+        msg = PLAYER_PLAY_TURN.replace("[1]", String.valueOf(Integer.parseInt(session.getId()) + 1))
+                .replace("[2]", String.valueOf(gameNumber));
         publishMessageToClients();
 
     }
 
 
     protected void sendWinnerMessage(WebSocketSession session) throws IOException {
-        msg = "Woohooooo!!! <br/> Player " + (Integer.parseInt(session.getId()) + 1) + " Won ";
+        msg = WINNER_MESSAGE.replace("[]", String.valueOf((Integer.parseInt(session.getId()) + 1)));
         //added for history tracking
         publishMessageToClients();
-
         //sessions.clear();
         messages.clear();
-        isFirstPlay=true;
+        isFirstPlay = true;
 
     }
 
@@ -73,9 +75,14 @@ public abstract class SocketHandlerBase extends TextWebSocketHandler {
         //added for history tracking
         messages.add(new TextMessage(msg));
         //publish to add players
-        for (WebSocketSession webSocketSession : sessions) {
-            webSocketSession.sendMessage(
-                    new TextMessage(msg));
-        }
+        sessions.forEach(webSocketSession -> {
+            try {
+                webSocketSession.sendMessage(
+                        new TextMessage(msg));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 }

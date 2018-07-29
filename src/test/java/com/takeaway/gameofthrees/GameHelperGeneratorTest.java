@@ -79,17 +79,5 @@ public class GameHelperGeneratorTest {
 
     }
 
-    @Test
-    public void shouldHaveAWinner(){
-        Integer number=3;
-        assertThat(gameHelperGenerator.checkWinner(number)).isTrue();
-    }
-
-    @Test
-    public void shouldNotHaveAWinnerYet(){
-        Integer number=6;
-        assertThat(gameHelperGenerator.checkWinner(number)).isFalse();
-    }
-
 
 }
